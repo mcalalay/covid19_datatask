@@ -1,0 +1,11 @@
+my_covid19_project:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: db
+      user: your_db_user
+      password: your_db_password
+      port: 5432
+      dbname: your_db_name
+      schema: public

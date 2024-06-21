@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    env_file:
+      - .env
+    # environment:
+    #   POSTGRES_USER: your_db_user
+    #   POSTGRES_PASSWORD: your_db_password
+    #   POSTGRES_DB: your_db_name
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  airflow:
+    build: ./airflow
+    restart: always
+    env_file:
+      - .env
+    # environment:
+    #   - LOAD_EX=n
+    #   - EXECUTOR=LocalExecutor
+    #   - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://your_db_user:your_db_password@db:5432/your_db_name
+    #   - AIRFLOW__CORE__FERNET_KEY=your_fernet_key
+    #   - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    #   - DB_USER=your_db_user
+    #   - DB_PASSWORD=your_db_password
+    #   - DB_HOST=db
+    #   - DB_PORT=5432
+    #   - DB_NAME=your_db_name
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./scripts:/app/scripts
+      - ./dbt_project:/app/dbt_project
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    command: webserver
+
+  airflow_scheduler:
+    build: ./airflow
+    restart: always
+    depends_on:
+      - db
+      - airflow
+    environment:
+      - EXECUTOR=LocalExecutor
+    command: scheduler
+
+volumes:
+  db_data:

@@ -1,0 +1,8 @@
+name: 'my_covid19_project'
+version: '1.0'
+profile: 'my_covid19_project'
+
+models:
+  my_covid19_project:
+    schema: 'transformed_layer'
+    materialized: 'table'
