@@ -17,7 +17,8 @@ USER airflow
 
 # Copy the dags folder to the Airflow container
 COPY dags /opt/airflow/dags
-COPY .. /app
+COPY . /app
+
 
 # Set the working directory
 WORKDIR /app
