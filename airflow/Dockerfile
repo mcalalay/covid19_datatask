@@ -18,9 +18,9 @@ USER airflow
 RUN airflow db init
 
 # Copy the dags folder to the Airflow container
-COPY dags /opt/airflow/dags
-COPY scripts /opt/airflow/scripts
-COPY dbt_project /opt/airflow/dbt_project
+COPY dags/* /opt/airflow/dags
+COPY scripts/* /opt/airflow/scripts
+COPY dbt_project/* /opt/airflow/dbt_project
 
 
 # Set the working directory

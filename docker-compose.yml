@@ -29,7 +29,7 @@ services:
        - DB_NAME=${DB_NAME}
        - _AIRFLOW_WWW_USER_CREATE=true
        - _AIRFLOW_WWW_USER_USERNAME=${AIRFLOW_USER}
-       - _AIRFLOW_WWW_USER_PASSWORD=${POSTGRES_DB}
+       - _AIRFLOW_WWW_USER_PASSWORD=${AIRFLOW_PASSWORD}
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./scripts:/opt/airflow/scripts
