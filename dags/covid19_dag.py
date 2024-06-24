@@ -16,18 +16,16 @@ dag = DAG(
     'covid19_ingestion_transformation',
     default_args=default_args,
     description='Ingest and transform COVID-19 data',
-    schedule_interval=timedelta(minutes=10),  # Run every 30 minutes
+    schedule_interval='*/3 * * * *', #every 3 minutes
     catchup=False  # Do not perform backfill
 )
 
-def ingest_data():
-    os.system("python /app/scripts/ingest_data.py")
 
-ingest_data_task = PythonOperator(
-    task_id='ingest_data',
-    python_callable=ingest_data,
-    dag=dag,
-)
+ingest_data_task = BashOperator(
+    task_id = 'Bash_task',
+    bash_command = 'python $AIRFLOW_HOME/dags/scripts/ingest_and_transform.py',
+    dag = dag
+    )
 
 dbt_run_task = BashOperator(
     task_id='dbt_run',

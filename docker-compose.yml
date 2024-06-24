@@ -1,58 +1,74 @@
-version: '3.3'
+version: '3.4'
+
+x-common:
+  &common
+  image: apache/airflow:2.3.0
+  user: "${AIRFLOW_UID}:0"
+  env_file: 
+    - .env
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - /var/run/docker.sock:/var/run/docker.sock
+
+x-depends-on:
+  &depends-on
+  depends_on:
+    postgres:
+      condition: service_healthy
+    airflow-init:
+      condition: service_completed_successfully
 
 services:
-  db:
+  postgres:
     image: postgres:13
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-
-  airflow:
-    build: ./airflow
-    restart: always
+    container_name: postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
     env_file:
       - .env
     environment:
-       - AIRFLOW__CORE__EXECUTOR=${EXECUTOR}
-       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=${SQL_ALCHEMY}
-       - AIRFLOW__CORE__FERNET_KEY=
-       - AIRFLOW__CORE__LOAD_EXAMPLES=False
-       - DB_USER=${DB_USER}
-       - DB_PASSWORD=${DB_PASSWORD}
-       - DB_HOST=${DB_HOST}
-       - DB_PORT=${DB_PORT}
-       - DB_NAME=${DB_NAME}
-       - _AIRFLOW_WWW_USER_CREATE=true
-       - _AIRFLOW_WWW_USER_USERNAME=${AIRFLOW_USER}
-       - _AIRFLOW_WWW_USER_PASSWORD=${AIRFLOW_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+# UPDATE your host here, for local machines (not docker) "localhost" worked for me
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
     volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
-      - ./dbt_project:/opt/airflow/dbt_project
+      - local_postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  scheduler:
+    <<: [*common, *depends-on]
+    container_name: airflow-scheduler
+    command: scheduler
+    restart: on-failure
+    ports:
+      - "8793:8793"
+
+  webserver:
+    <<: [*common, *depends-on]
+    container_name: airflow-webserver
+    restart: always
+    command: webserver
     ports:
       - "8080:8080"
-    depends_on:
-      - db
-    command: webserver
-
-  airflow_scheduler:
-    build: ./airflow
-    restart: always
-    depends_on:
-      - db
-      - airflow
-    environment:
-      - EXECUTOR=CeleryExecutor
-    volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/scripts:/opt/airflow/scripts
-      - ./airflow/dbt_project:/opt/airflow/dbt_project
-    command: scheduler
-
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+  
+  airflow-init:
+    <<: *common
+    container_name: airflow-init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        mkdir -p /sources/logs /sources/dags /sources/plugins
+        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
+        exec /entrypoint airflow version
 volumes:
-  pgdata:
+    local_postgres_data:
