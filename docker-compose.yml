@@ -33,7 +33,7 @@ services:
     environment:
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
 # UPDATE your host here, for local machines (not docker) "localhost" worked for me
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_HOST: ${POSTGRES_HOST:-5432}
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
     ports:
