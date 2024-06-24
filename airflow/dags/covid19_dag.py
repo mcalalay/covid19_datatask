@@ -16,7 +16,8 @@ dag = DAG(
     'covid19_ingestion_transformation',
     default_args=default_args,
     description='Ingest and transform COVID-19 data',
-    schedule_interval=timedelta(days=1),
+    schedule_interval=timedelta(minutes=10),  # Run every 30 minutes
+    catchup=False  # Do not perform backfill
 )
 
 def ingest_data():

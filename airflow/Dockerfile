@@ -15,10 +15,14 @@ RUN apt-get update && apt-get install -y \
 # Switch back to the airflow user
 USER airflow
 
+RUN airflow db init
+
 # Copy the dags folder to the Airflow container
 COPY dags /opt/airflow/dags
-COPY . /app
+COPY scripts /opt/airflow/scripts
+COPY dbt_project /opt/airflow/dbt_project
 
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /opt/airflow
+
