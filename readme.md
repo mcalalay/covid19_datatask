@@ -17,3 +17,7 @@ likely the database needs to be initiated, just follow the steps below:
     airflow db init
     exit
 done
+
+if dags won't run, you must do the following commands within the container environment of airflow:
+
+airflow scheduler

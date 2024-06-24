@@ -50,8 +50,8 @@ services:
       - EXECUTOR=CeleryExecutor
     volumes:
       - ./airflow/dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
-      - ./dbt_project:/opt/airflow/dbt_project
+      - ./airflow/scripts:/opt/airflow/scripts
+      - ./airflow/dbt_project:/opt/airflow/dbt_project
     command: scheduler
 
 volumes:
