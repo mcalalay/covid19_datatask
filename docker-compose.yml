@@ -17,19 +17,19 @@ services:
     restart: always
     env_file:
       - .env
-    # environment:
-    #    - EXECUTOR=LocalExecutor
-    #    - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://postgresql:admin@db:5432/covid19_project
-    #    - AIRFLOW__CORE__FERNET_KEY=
-    #    - AIRFLOW__CORE__LOAD_EXAMPLES=False
-    #    - DB_USER=postgresql
-    #    - DB_PASSWORD=admin
-    #    - DB_HOST=db
-    #    - DB_PORT=5432
-    #    - DB_NAME=covid19_project
-    #    - _AIRFLOW_WWW_USER_CREATE=true
-    #    - _AIRFLOW_WWW_USER_USERNAME=airflow
-    #    - _AIRFLOW_WWW_USER_PASSWORD=airflow
+    environment:
+       - AIRFLOW__CORE__EXECUTOR=${EXECUTOR}
+       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=${SQL_ALCHEMY}
+       - AIRFLOW__CORE__FERNET_KEY=
+       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+       - DB_USER=${DB_USER}
+       - DB_PASSWORD=${DB_PASSWORD}
+       - DB_HOST=${DB_HOST}
+       - DB_PORT=${DB_PORT}
+       - DB_NAME=${DB_NAME}
+       - _AIRFLOW_WWW_USER_CREATE=true
+       - _AIRFLOW_WWW_USER_USERNAME=${AIRFLOW_USER}
+       - _AIRFLOW_WWW_USER_PASSWORD=${POSTGRES_DB}
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./scripts:/opt/airflow/scripts
