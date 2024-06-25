@@ -1,23 +1,14 @@
-##
-#  This dockerfile is used for local development and testing
-##
-FROM apache/airflow:2.2.0
+FROM apache/airflow:2.9.2
 
+# Install dbt and other required packages
 USER root
+COPY requirements.txt /requirements.txt
 
-RUN sudo apt-get update \
-    && apt-get install -y --no-install-recommends \
-    gcc \
-    python3-distutils \
-    libpython3.9-dev
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    python3-dev \
+    && pip install --upgrade pip \
+    pip install --no-cache-dir -r /requirements.txt
 
 USER airflow
-
-COPY --chown=airflow . .
-
-RUN python -m pip install .
-
-
-RUN pip install dbt-postgres==1.5.9
-
-RUN dbt deps --project-dir /opt/airflow/example_dbt_project
