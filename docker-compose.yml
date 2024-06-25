@@ -6,8 +6,6 @@ x-common:
   user: "${AIRFLOW_UID}:0"
   env_file: 
     - .env
-  environment:
-    - _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- dbt-core dbt-postgres}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -53,6 +51,8 @@ services:
     container_name: airflow-webserver
     restart: always
     command: webserver
+    environment:
+      - _PIP_ADDITIONAL_REQUIREMENTS: 'dbt-core dbt-postgres'
     ports:
       - "8080:8080"
     healthcheck:
@@ -71,5 +71,7 @@ services:
         mkdir -p /sources/logs /sources/dags /sources/plugins
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
         exec /entrypoint airflow version
+    environment:
+      - _PIP_ADDITIONAL_REQUIREMENTS: 'dbt-core dbt-postgres'
 volumes:
     local_postgres_data:
