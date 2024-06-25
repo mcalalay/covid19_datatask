@@ -7,6 +7,13 @@ x-common:
   user: "${AIRFLOW_UID}:0"
   env_file: 
     - .env
+  environement:
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+    _AIRFLOW_WWW_USER_USERNAME: airflow
+    _AIRFLOW_WWW_USER_PASSWORD: airflow
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__FERNET_KEY: ''
+
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
