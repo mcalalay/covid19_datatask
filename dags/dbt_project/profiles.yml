@@ -3,9 +3,9 @@ my_covid19_project:
   outputs:
     dev:
       type: postgres
-      host: db
-      user: your_db_user
-      password: your_db_password
+      host: postgres
+      user: postgresql
+      password: admin
       port: 5432
-      dbname: your_db_name
+      dbname: covid19_project
       schema: public
