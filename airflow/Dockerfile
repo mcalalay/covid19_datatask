@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     python3-dev \
-    && pip install --upgrade pip \
-    pip install --no-cache-dir -r /requirements.txt
+    dbt-core \
+    dbt-postgres
 
 USER airflow
