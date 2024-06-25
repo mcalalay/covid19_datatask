@@ -1,17 +1,23 @@
-FROM python:3.6.1-alpine
+##
+#  This dockerfile is used for local development and testing
+##
+FROM apache/airflow:2.5.0
 
-RUN apk update \
-  && apk add \
-    build-base \
-    postgresql \
-    postgresql-dev \
-    libpq
+USER root
 
-RUN mkdir /app
-WORKDIR /app
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+RUN sudo apt-get update \
+    && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-distutils \
+    libpython3.9-dev
 
-ENV PYTHONUNBUFFERED 1
+USER airflow
 
-COPY . .
+COPY --chown=airflow . .
+
+RUN python -m pip install .
+
+
+RUN pip install dbt-postgres==1.5.9
+
+RUN dbt deps --project-dir /opt/airflow/example_dbt_project
