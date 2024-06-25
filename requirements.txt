@@ -1,6 +1,0 @@
-pandas
-sqlalchemy
-requests
-psycopg2==2.7.2
-dbt-core
-dbt-postgres
