@@ -1,6 +1,4 @@
 pandas
 sqlalchemy
 requests
-dbt-core
-dbt-postgres
 psycopg2==2.7.2
