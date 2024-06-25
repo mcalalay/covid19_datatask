@@ -6,6 +6,8 @@ x-common:
   user: "${AIRFLOW_UID}:0"
   env_file: 
     - .env
+  environment:
+    - _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- dbt-core dbt-postgres}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -32,7 +34,6 @@ services:
       - .env
     environment:
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-# UPDATE your host here, for local machines (not docker) "localhost" worked for me
       POSTGRES_HOST: ${POSTGRES_HOST:-5432}
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
@@ -40,8 +41,7 @@ services:
       - 5432:5432
 
   scheduler:
-    <<: [*depends-on]
-
+    <<: [*common, *depends-on]
     container_name: airflow-scheduler
     command: scheduler
     restart: on-failure
@@ -49,16 +49,7 @@ services:
       - "8793:8793"
 
   webserver:
-    <<: [*depends-on]
-    build: ./airflow
-    user: "${AIRFLOW_UID}:0"
-    env_file: 
-      - .env
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - /var/run/docker.sock:/var/run/docker.sock
+    <<: [*common, *depends-on]
     container_name: airflow-webserver
     restart: always
     command: webserver
