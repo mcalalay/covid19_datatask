@@ -4,6 +4,8 @@ FROM apache/airflow:2.9.2
 USER root
 COPY requirements.txt /requirements.txt
 
+RUN apt-get update && apt-get install -y apt-utils
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
