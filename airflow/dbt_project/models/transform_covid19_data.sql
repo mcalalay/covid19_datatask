@@ -1,5 +1,5 @@
 with raw_data as (
-    select * from {{ ref('covid19_data') }}
+    select * from covid19_data
 ),
 
 transformed_data as (
