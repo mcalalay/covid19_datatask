@@ -29,7 +29,7 @@ ingest_data_task = BashOperator(
 
 dbt_run_task = BashOperator(
     task_id='dbt_run',
-    bash_command='cd $AIRFLOW_HOME/dags/dbt_project && dbt run',
+    bash_command='cd $AIRFLOW_HOME/dbt_project && dbt run',
     dag=dag,
 )
 
