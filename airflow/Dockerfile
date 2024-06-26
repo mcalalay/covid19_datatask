@@ -16,6 +16,6 @@ RUN apt-get update && apt-get install -y \
     
 USER airflow
 RUN pip install --upgrade pip
-RUN python -m pip install dbt-core dbt-postgres
+RUN python -m pip install dbt-core dbt-postgres psycopg2-binary pandas sqlalchemy requests
 
  
