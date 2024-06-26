@@ -32,16 +32,29 @@ SETUP
     c) wait for all containers to run successfully
     d) access airflow UI by opening a browser and going to localhost:8080
         Airflow Credentials
-            username:postgres
-            password:admin
+            username:airflow
+            password:airflow
     e) you can manually trigger the dag or wait for its scheduled run every 3 minutes
 4) install postgresql in your environment to view/query the data
     a) run: sudo apt update
     b) run: sudo apt install snapd
-    c) run: sudo sudo snap install dbeaver-ce
-
+    c) run: sudo snap install dbeaver-ce
+    d) run dbeaver
+    e) choose postgresql
+        input the ff:
+        user: postgresql
+        password: admin
 
 
 Answers to my activity will be found in the sql_queries directory
 One file is made for each question including the explanation inside.
 Each query has been used in the data base created.
+
+Room for improvments:
+1) documentation can be streamlined and in a better format
+2) ELT procedures could have been more complex to produce a more refined data
+3) better sql statements could be done (also optimized)
+4) better coding principles could have been applied
+5) setup can be more automated rather than having to setup a VM and loading some repositories and dependencies
+6) could have been deployed to cloud for better adaptability
+

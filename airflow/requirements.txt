@@ -1,2 +1,6 @@
+psycopg2-binary
+pandas
+sqlalchemy
+requests
 dbt-core
 dbt-postgres
