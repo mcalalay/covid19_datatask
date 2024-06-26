@@ -3,7 +3,7 @@ FROM apache/airflow:2.9.2
 # Install dbt and other required packages
 USER root
 COPY requirements.txt /requirements.txt
-COPY dbt_project /opt/airflow/dbt_project
+COPY dbt_project /root/.dbt/
 
 
 RUN apt-get update && apt-get install -y apt-utils
