@@ -41,9 +41,11 @@ SETUP
     c) run: sudo snap install dbeaver-ce
     d) run dbeaver
     e) choose postgresql
-        input the ff:
-        user: postgresql
-        password: admin
+        input the following as config for postgresql
+            host: localhost
+            Database: covid19_project
+            user: postgresql
+            password: admin
 
 
 Answers to my activity will be found in the sql_queries directory
